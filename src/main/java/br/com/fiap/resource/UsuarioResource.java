@@ -42,7 +42,12 @@ public class UsuarioResource {
     public ResponseEntity<?> save(@RequestBody @Valid UsuarioTO usuario){
         try {
             UsuarioTO resultado = usuarioBO.save(usuario);
-            return ResponseEntity.status(HttpStatus.CREATED).body(usuario);
+            if (resultado != null) {
+                return ResponseEntity.status(HttpStatus.CREATED).body(resultado);
+                //configurando o retorno com status created 201
+            }
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erro ao salvar usuario");
+            //configurando o retorno com status bad request 400
         }catch (Exception e){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erro ao salvar usuario");
         }
@@ -61,9 +66,18 @@ public class UsuarioResource {
     public ResponseEntity<?> update (@PathVariable Integer idUsuario,
                                      @RequestBody @Valid UsuarioTO usuario){
         try {
+            if (usuarioBO.findByCodigo(idUsuario) == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario não encontrado!");
+                //configurando o retorno com status not found 404
+            }
             usuario.setIdUsuario(idUsuario);
             UsuarioTO resultado = usuarioBO.update(usuario);
-            return ResponseEntity.status(HttpStatus.CREATED).body(usuario);
+            if (resultado != null) {
+                return ResponseEntity.status(HttpStatus.CREATED).body(resultado);
+                //configurando o retorno com status created 201
+            }
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erro ao atualizar o usuario");
+            //configurando o retorno com status bad request 400
         }catch (Exception e){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body("Erro ao atualizar o usuario");

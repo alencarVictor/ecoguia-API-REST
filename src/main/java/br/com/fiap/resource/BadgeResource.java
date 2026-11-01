@@ -42,7 +42,12 @@ public class BadgeResource {
     public ResponseEntity<?> save(@RequestBody @Valid BadgeTO badge){
         try {
             BadgeTO resultado = badgeBO.save(badge);
-            return ResponseEntity.status(HttpStatus.CREATED).body(badge);
+            if (resultado != null) {
+                return ResponseEntity.status(HttpStatus.CREATED).body(resultado);
+                //configurando o retorno com status created 201
+            }
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erro ao salvar badge");
+            //configurando o retorno com status bad request 400
         }catch (Exception e){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erro ao salvar badge");
         }
@@ -61,9 +66,18 @@ public class BadgeResource {
     public ResponseEntity<?> update (@PathVariable Integer idBadge,
                                      @RequestBody @Valid BadgeTO badge){
         try {
+            if (badgeBO.findByCodigo(idBadge) == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Badge não encontrada!");
+                //configurando o retorno com status not found 404
+            }
             badge.setIdBadge(idBadge);
             BadgeTO resultado = badgeBO.update(badge);
-            return ResponseEntity.status(HttpStatus.CREATED).body(badge);
+            if (resultado != null) {
+                return ResponseEntity.status(HttpStatus.CREATED).body(resultado);
+                //configurando o retorno com status created 201
+            }
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erro ao atualizar o badge");
+            //configurando o retorno com status bad request 400
         }catch (Exception e){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body("Erro ao atualizar o badge");

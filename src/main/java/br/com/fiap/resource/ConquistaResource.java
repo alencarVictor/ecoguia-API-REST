@@ -42,7 +42,12 @@ public class ConquistaResource {
     public ResponseEntity<?> save(@RequestBody @Valid ConquistaTO conquista){
         try {
             ConquistaTO resultado = conquistaBO.save(conquista);
-            return ResponseEntity.status(HttpStatus.CREATED).body(conquista);
+            if (resultado != null) {
+                return ResponseEntity.status(HttpStatus.CREATED).body(resultado);
+                //configurando o retorno com status created 201
+            }
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erro ao salvar conquista");
+            //configurando o retorno com status bad request 400
         }catch (Exception e){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erro ao salvar conquista");
         }
@@ -61,9 +66,18 @@ public class ConquistaResource {
     public ResponseEntity<?> update (@PathVariable Integer idConquista,
                                      @RequestBody @Valid ConquistaTO conquista){
         try {
+            if (conquistaBO.findByCodigo(idConquista) == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Conquista não encontrada!");
+                //configurando o retorno com status not found 404
+            }
             conquista.setIdConquista(idConquista);
             ConquistaTO resultado = conquistaBO.update(conquista);
-            return ResponseEntity.status(HttpStatus.CREATED).body(conquista);
+            if (resultado != null) {
+                return ResponseEntity.status(HttpStatus.CREATED).body(resultado);
+                //configurando o retorno com status created 201
+            }
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erro ao atualizar a conquista");
+            //configurando o retorno com status bad request 400
         }catch (Exception e){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body("Erro ao atualizar a conquista");

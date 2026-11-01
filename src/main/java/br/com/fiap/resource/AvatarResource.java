@@ -42,7 +42,12 @@ public class AvatarResource {
     public ResponseEntity<?> save(@RequestBody @Valid AvatarTO avatar){
         try {
             AvatarTO resultado = avatarBO.save(avatar);
-            return ResponseEntity.status(HttpStatus.CREATED).body(avatar);
+            if (resultado != null) {
+                return ResponseEntity.status(HttpStatus.CREATED).body(resultado);
+                //configurando o retorno com status created 201
+            }
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erro ao salvar avatar");
+            //configurando o retorno com status bad request 400
         }catch (Exception e){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erro ao salvar avatar");
         }
@@ -61,9 +66,18 @@ public class AvatarResource {
     public ResponseEntity<?> update (@PathVariable Integer idAvatar,
                                      @RequestBody @Valid AvatarTO avatar){
         try {
+            if (avatarBO.findByCodigo(idAvatar) == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Avatar não encontrado!");
+                //configurando o retorno com status not found 404
+            }
             avatar.setIdAvatar(idAvatar);
             AvatarTO resultado = avatarBO.update(avatar);
-            return ResponseEntity.status(HttpStatus.CREATED).body(avatar);
+            if (resultado != null) {
+                return ResponseEntity.status(HttpStatus.CREATED).body(resultado);
+                //configurando o retorno com status created 201
+            }
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erro ao atualizar o avatar");
+            //configurando o retorno com status bad request 400
         }catch (Exception e){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body("Erro ao atualizar o avatar");
