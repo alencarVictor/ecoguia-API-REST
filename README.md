@@ -1,7 +1,7 @@
 # EcoGuia API
 
 🔗 **Deploy:** https://ecoguia-api-rest.onrender.com
-📄 **Documentação (PDF):** [doc/EcoGuia-Documentacao.pdf](doc/Documentação-EcoGuia-Java-Sprint4(5).pdf)
+📄 **Documentação (PDF):** [doc/EcoGuia-Documentacao.pdf]
 
 API RESTful em Java com Spring Boot e banco Oracle, desenvolvida para a Sprint 4 (FIAP). Gerencia avatares, badges, usuários e conquistas da aplicação de gamificação EcoGuia, consumida por um front-end em React.
 
